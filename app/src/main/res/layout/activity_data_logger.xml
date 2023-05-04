@@ -4,42 +4,65 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".DataLoggerActivity">
+    tools:context=".activity02.DataLoggerActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center"
+        android:layout_height="match_parent"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <ImageView
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:src="@mipmap/movesense_icon"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            />
-
         <Button
-            android:id="@+id/btnLogStart"
+            android:id="@+id/btnCreateLog"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Start"
             android:onClick="onLogClickButton"
-            android:layout_marginLeft="20dp"
-            />
-        <Button
-            android:id="@+id/btnLogStop"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Stop"
-            android:onClick="onLogClickButton"
-            android:layout_marginLeft="20dp"
-            />
+            android:text="CREATE LOG" />
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center">
+
+            <ImageView
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:src="@mipmap/movesense_icon"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="--"
+                android:id="@+id/tvLogState"
+                android:gravity="center"
+                android:layout_marginHorizontal="10dp"
+                android:layout_weight="0.3"
+                />
+            <Button
+                android:id="@+id/btnStartLog"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Start"
+                android:onClick="onLogClickButton"
+                android:layout_marginLeft="10dp"
+                />
+            <Button
+                android:id="@+id/btnStopLog"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Stop"
+                android:onClick="onLogClickButton"
+                android:layout_marginLeft="10dp"
+                />
+
+        </LinearLayout>
     </LinearLayout>
+
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

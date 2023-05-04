@@ -1,4 +1,4 @@
-package jp.aoyama.it.movesenseloggerapp;
+package jp.aoyama.it.movesenseloggerapp.activity00;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -16,6 +16,9 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
 import android.widget.Toast;
+
+import jp.aoyama.it.movesenseloggerapp.activity01.ConnectionActivity;
+import jp.aoyama.it.movesenseloggerapp.R;
 
 public class PermissionActivity extends AppCompatActivity {
     // Request code（任意の値でOK）

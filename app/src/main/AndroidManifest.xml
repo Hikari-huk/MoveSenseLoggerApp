@@ -23,14 +23,14 @@
         android:theme="@style/Theme.MoveSenseLoggerApp"
         tools:targetApi="31">
         <activity
-            android:name=".DataLoggerActivity"
+            android:name=".activity02.DataLoggerActivity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
-            android:name=".PermissionActivity"
+            android:name=".activity00.PermissionActivity"
             android:exported="true">
             <meta-data
                 android:name="android.app.lib_name"
@@ -43,7 +43,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ConnectionActivity"
+            android:name=".activity01.ConnectionActivity"
             android:exported="true">
             <meta-data
                 android:name="android.app.lib_name"

@@ -1,4 +1,4 @@
-package jp.aoyama.it.movesenseloggerapp;
+package jp.aoyama.it.movesenseloggerapp.activity01;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -15,12 +15,14 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.Toast;
 
 import com.movesense.mds.Mds;
 import com.movesense.mds.MdsConnectionListener;
 import com.movesense.mds.MdsException;
+
+import jp.aoyama.it.movesenseloggerapp.activity02.DataLoggerActivity;
+import jp.aoyama.it.movesenseloggerapp.R;
 
 public class ConnectionActivity extends AppCompatActivity {
 
@@ -109,7 +111,7 @@ public class ConnectionActivity extends AppCompatActivity {
                         public void onConnectionComplete(String macAddress, String serial) {
                             Log.d(TAG, "onConnectionComplete: " + serial);
                             showToast("接続しました\nSerial: " + serial);
-                            Intent intent = new Intent(ConnectionActivity.this,DataLoggerActivity.class);
+                            Intent intent = new Intent(ConnectionActivity.this, DataLoggerActivity.class);
                             intent.putExtra(DataLoggerActivity.SERIAL, serial);
                             intent.putExtra(DataLoggerActivity.MAC_ADDRESS, macAddress);
                             startActivity(intent);
