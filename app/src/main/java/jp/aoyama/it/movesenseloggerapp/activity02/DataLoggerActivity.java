@@ -5,7 +5,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Message;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -13,9 +12,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import com.movesense.mds.Mds;
 import com.movesense.mds.MdsException;
 import com.movesense.mds.MdsResponseListener;
+
+import org.json.JSONObject;
 
 import java.text.MessageFormat;
 
@@ -144,8 +146,10 @@ public class DataLoggerActivity extends AppCompatActivity {
             @Override
             public void onSuccess(String data){
                 Log.d(TAG, "Success fetch: "+data);
+                JSONObject jsonObject = new JSON(data);
+                Log.d(TAG, String.valueOf(mdsLogbookEntriesResponse));
 
-                readLogData();
+                readLog();
             }
             @Override
             public void onError(MdsException e) {
@@ -154,24 +158,47 @@ public class DataLoggerActivity extends AppCompatActivity {
         });
     }
 
-    private void readLogData(){
-        String readLogUri = MessageFormat.format(URI_MDS_LOGBOOK_DATA,serial,342);
+    private void readLog(){
+        String readLogUri = MessageFormat.format(URI_MDS_LOGBOOK_DATA,serial,344);
 
         Mds.builder().build(this).get(readLogUri, null, new MdsResponseListener() {
 
             @Override
             public void onSuccess(String data){
-                Log.d(TAG, data);
+
+                Log.d(TAG, "read :"+data);
+
             }
             @Override
             public void onError(MdsException e) {
 
             }
         });
+    }
+
+    private void deleteLog(){
+        String deleteLogUri = MessageFormat.format(URI_LOGBOOK_ENTRIES,serial);
+
+        Mds.builder().build(this).delete(deleteLogUri, null, new MdsResponseListener() {
+
+            @Override
+            public void onSuccess(String data){
+                Log.d(TAG, data);
+
+            }
+            @Override
+            public void onError(MdsException e) {
+
+            }
+        });
+
     }
 
     private void displayToast(String message){
         Toast.makeText(getApplicationContext(),message,Toast.LENGTH_LONG);
     }
 
+
+
 }
+
