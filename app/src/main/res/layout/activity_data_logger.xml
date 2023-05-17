@@ -21,6 +21,14 @@
             android:onClick="onLogClickButton"
             android:text="CREATE LOG" />
 
+        <Button
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:id="@+id/btnDelete"
+            android:onClick="onLogClickButton"
+            android:text="Delete LOG"
+            />
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -50,7 +58,7 @@
                 android:text="Start"
                 android:onClick="onLogClickButton"
                 android:visibility="visible"
-                android:layout_marginRight="40dp"
+                android:layout_marginRight="10dp"
                 />
             <Button
                 android:id="@+id/btnStopLog"
@@ -59,7 +67,17 @@
                 android:text="Stop"
                 android:onClick="onLogClickButton"
                 android:visibility="gone"
-                android:layout_marginRight="40dp"
+                android:layout_marginRight="10dp"
+                />
+
+            <Button
+                android:id="@+id/btnFetchLog"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Fetch"
+                android:onClick="onLogClickButton"
+                android:visibility="visible"
+                android:layout_marginRight="10dp"
                 />
 
         </LinearLayout>

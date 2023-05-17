@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.sax.Element;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -13,15 +14,27 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import com.google.gson.annotations.SerializedName;
 import com.movesense.mds.Mds;
 import com.movesense.mds.MdsException;
 import com.movesense.mds.MdsResponseListener;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.text.MessageFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import jp.aoyama.it.movesenseloggerapp.R;
+
+
+
+
+
+
+
 
 public class DataLoggerActivity extends AppCompatActivity {
 
@@ -44,6 +57,7 @@ public class DataLoggerActivity extends AppCompatActivity {
     private static final String URI_DATA_LOGGER_CONFIG = "suunto://{0}/Mem/DataLogger/Config";
 
     private static final String URI_DATA_ACC_CONFIG = "/Meas/Acc/13";
+    private static final String URI_DATA_GYRO_CONFIG = "/Meas/Gyro/13";
 
     //UI instance
     private TextView tvLogState;
@@ -80,13 +94,20 @@ public class DataLoggerActivity extends AppCompatActivity {
             setDataLoggerState(false);
             btnStart.setVisibility(View.VISIBLE);
             btnStop.setVisibility(View.GONE);
+        }else if(view.getId()==R.id.btnDelete){
+            displayToast("Delete");
+            deleteLog();
+        }else if(view.getId()==R.id.btnFetchLog){
+            displayToast("Fetch");
+            fetchAllEntriesLog();
+            readLog();
         }
     }
 
     private void createDataLoggerConfig(){
         String configUri = MessageFormat.format(URI_DATA_LOGGER_CONFIG, serial);
 
-        DataLoggerConfig.DataEntry[] entries = {new DataLoggerConfig.DataEntry(URI_DATA_ACC_CONFIG)};
+        DataLoggerConfig.DataEntry[] entries = {new DataLoggerConfig.DataEntry(URI_DATA_ACC_CONFIG), new DataLoggerConfig.DataEntry(URI_DATA_GYRO_CONFIG)};
         DataLoggerConfig config = new DataLoggerConfig(new DataLoggerConfig.Config(new DataLoggerConfig.DataEntries(entries)));
         String jsonConfig = new Gson().toJson(config,DataLoggerConfig.class);
 
@@ -117,7 +138,7 @@ public class DataLoggerActivity extends AppCompatActivity {
                 Log.d(TAG, "Put DataLogger/State state successful: "+data);
 
                 if(!isStartLogging){
-                    fetchAllEntriesLog();
+//                    fetchAllEntriesLog();
                 }
 
             }
@@ -146,10 +167,16 @@ public class DataLoggerActivity extends AppCompatActivity {
             @Override
             public void onSuccess(String data){
                 Log.d(TAG, "Success fetch: "+data);
-                JSONObject jsonObject = new JSON(data);
-                Log.d(TAG, String.valueOf(mdsLogbookEntriesResponse));
 
-                readLog();
+
+                Gson gson = new Gson();
+                MyData mydata = gson.fromJson(data, MyData.class);
+
+                Log.d(TAG,mydata.toString());
+                for(Element e: mydata.content.elements){
+                    Log.d(TAG,"Id:"+e.id+"\nTime:"+e.modificationTimestamp+"\nsize:"+e.size);
+                }
+                System.out.println("system:"+mydata.toString());
             }
             @Override
             public void onError(MdsException e) {
@@ -159,7 +186,7 @@ public class DataLoggerActivity extends AppCompatActivity {
     }
 
     private void readLog(){
-        String readLogUri = MessageFormat.format(URI_MDS_LOGBOOK_DATA,serial,344);
+        String readLogUri = MessageFormat.format(URI_MDS_LOGBOOK_DATA,serial,1);
 
         Mds.builder().build(this).get(readLogUri, null, new MdsResponseListener() {
 
@@ -198,7 +225,48 @@ public class DataLoggerActivity extends AppCompatActivity {
         Toast.makeText(getApplicationContext(),message,Toast.LENGTH_LONG);
     }
 
+    class MyData {
+        @SerializedName("Content")
+        Content content;
 
+        @Override
+        public String toString() {
+            return "MyData{" +
+                    "content=" + content +
+                    '}';
+        }
+    }
+
+    class Content {
+        List<Element> elements;
+
+        @Override
+        public String toString() {
+            return "Content{" +
+                    "elements=" + elements +
+                    '}';
+        }
+    }
+
+    class Element {
+        @SerializedName("Id")
+        int id;
+
+        @SerializedName("ModificationTimestamp")
+        int modificationTimestamp;
+
+        @SerializedName("Size")
+        Integer size;
+
+        @Override
+        public String toString() {
+            return "Element{" +
+                    "id=" + id +
+                    ", modificationTimestamp=" + modificationTimestamp +
+                    ", size=" + size +
+                    '}';
+        }
+    }
 
 }
 
