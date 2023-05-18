@@ -47,7 +47,9 @@ public class DataLoggerActivity extends AppCompatActivity {
     private String macAddress="";
 
     //DataLogger
-    private DataLoggerState mDLState;
+    private DataLoggerState mDLState;//movesenseの状態
+    private MdsLogbookEntriesResponse logBook;//movesense内の全てのログを格納
+
 
     //Logger Path URI
     private static final String URI_MDS_LOGBOOK_DATA= "suunto://MDS/Logbook/{0}/byId/{1}/Data";
@@ -71,6 +73,7 @@ public class DataLoggerActivity extends AppCompatActivity {
 
         btnStart = findViewById(R.id.btnStartLog);
         btnStop = findViewById(R.id.btnStopLog);
+        tvLogState = findViewById(R.id.tvLogState);
 
         Intent intent = getIntent();
         serial = intent.getStringExtra(SERIAL);
@@ -100,7 +103,7 @@ public class DataLoggerActivity extends AppCompatActivity {
         }else if(view.getId()==R.id.btnFetchLog){
             displayToast("Fetch");
             fetchAllEntriesLog();
-            readLog();
+
         }
     }
 
@@ -130,6 +133,8 @@ public class DataLoggerActivity extends AppCompatActivity {
         String stateUri = MessageFormat.format(URI_DATA_LOGGER_STATE, serial);
         int newState = isStartLogging ? 3 : 2;
         String payload = "{\"newState\":" + newState + "}";
+        mDLState = new DataLoggerState(newState);
+        tvLogState.setText(mDLState.toString());
 
         Mds.builder().build(this).put(stateUri, payload, new MdsResponseListener() {
 
@@ -170,13 +175,14 @@ public class DataLoggerActivity extends AppCompatActivity {
 
 
                 Gson gson = new Gson();
-                MyData mydata = gson.fromJson(data, MyData.class);
+                logBook = gson.fromJson(data, MdsLogbookEntriesResponse.class);
 
-                Log.d(TAG,mydata.toString());
-                for(Element e: mydata.content.elements){
-                    Log.d(TAG,"Id:"+e.id+"\nTime:"+e.modificationTimestamp+"\nsize:"+e.size);
+                Log.d(TAG,logBook.toString());
+                for(MdsLogbookEntriesResponse.LogEntry e: logBook.logContent.logEntries){
+                    Log.d(TAG,"Id:"+e.id+", Time:"+e.modificationTimestamp+", size:"+e.size);
                 }
-                System.out.println("system:"+mydata.toString());
+                readLog();
+
             }
             @Override
             public void onError(MdsException e) {
@@ -186,21 +192,28 @@ public class DataLoggerActivity extends AppCompatActivity {
     }
 
     private void readLog(){
-        String readLogUri = MessageFormat.format(URI_MDS_LOGBOOK_DATA,serial,1);
+        Log.d(TAG, String.valueOf(logBook.logContent.logEntries.get(0).id));
+        if(logBook != null) {
+            String readLogUri = MessageFormat.format(URI_MDS_LOGBOOK_DATA, serial, logBook.logContent.logEntries.get(0).id);
 
-        Mds.builder().build(this).get(readLogUri, null, new MdsResponseListener() {
+            Mds.builder().build(this).get(readLogUri, null, new MdsResponseListener() {
 
-            @Override
-            public void onSuccess(String data){
+                @Override
+                public void onSuccess(String data) {
 
-                Log.d(TAG, "read :"+data);
+                    Log.d(TAG, "read :" + data);
+                    Gson gson = new Gson();
+                    LogData logData = gson.fromJson(data,LogData.class);
+                    Log.d(TAG,"Java Object:"+logData.toString());
 
-            }
-            @Override
-            public void onError(MdsException e) {
+                }
 
-            }
-        });
+                @Override
+                public void onError(MdsException e) {
+
+                }
+            });
+        }
     }
 
     private void deleteLog(){
@@ -210,7 +223,7 @@ public class DataLoggerActivity extends AppCompatActivity {
 
             @Override
             public void onSuccess(String data){
-                Log.d(TAG, data);
+                Log.d(TAG, "success delete");
 
             }
             @Override

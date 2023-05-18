@@ -4,6 +4,7 @@ import com.google.gson.annotations.SerializedName;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by lipponep on 23.11.2017.
@@ -11,12 +12,21 @@ import java.util.Date;
 
 public class MdsLogbookEntriesResponse {
 
-    public MdsLogbookEntriesResponse(LogEntry[] logEntries) {
-        this.logEntries = logEntries;
+    @SerializedName("Content")
+    public LogContent logContent;
+
+    public MdsLogbookEntriesResponse(LogContent logContent) {
+        this.logContent = logContent;
     }
 
-    @SerializedName("elements")
-    public final LogEntry[] logEntries;
+    public class LogContent{
+        @SerializedName("elements")
+        public List<LogEntry> logEntries;
+
+        public LogContent(List<LogEntry> logEntries){
+            this.logEntries = logEntries;
+        }
+    }
 
     public static class LogEntry {
         @SerializedName("Id")
@@ -57,7 +67,7 @@ public class MdsLogbookEntriesResponse {
     public String toString() {
         StringBuilder sb = new StringBuilder();
 
-        for (LogEntry le : logEntries) {
+        for (LogEntry le : logContent.logEntries) {
             if (sb.length() > 0)
                 sb.append("\n");
 
