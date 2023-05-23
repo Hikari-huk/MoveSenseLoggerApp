@@ -44,22 +44,27 @@ public class LogData {
     @Override
     public String toString(){
         StringBuilder sb = new StringBuilder();
-
-        for(Acc a: meas.acc){
-            sb.append("Acc Timestamp: "+a.timestamp);
-            for(Data data: a.arrayAcc) {
-                sb.append(", x:" + data.x + ", y:" + data.y + ", z:" + data.z+"\n");
+        if(meas.acc != null){
+            for(Acc a: meas.acc){
+                sb.append("Acc Timestamp: "+a.timestamp);
+                for(Data data: a.arrayAcc) {
+                    sb.append(", x:" + data.x + ", y:" + data.y + ", z:" + data.z+"\n");
+                }
             }
+
         }
         sb.append("\n");
-        for(Gyro g: meas.gyro){
-            sb.append("Gyro Timestamp: "+g.timestamp);
-            for(Data data: g.arrayGyro) {
-                sb.append(", x:" + data.x + ", y:" + data.y + ", z:" + data.z+"\n");
+        if(meas.gyro != null){
+
+            for(Gyro g: meas.gyro){
+                sb.append("Gyro Timestamp: "+g.timestamp);
+                for(Data data: g.arrayGyro) {
+                    sb.append(", x:" + data.x + ", y:" + data.y + ", z:" + data.z+"\n");
+                }
             }
+
+
         }
-
-
         return sb.toString();
     }
 }

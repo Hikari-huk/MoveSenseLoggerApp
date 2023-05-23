@@ -165,6 +165,7 @@ public class DataLoggerActivity extends AppCompatActivity {
     }
 
     private void fetchAllEntriesLog(){
+
         String fetchUri = MessageFormat.format(URI_LOGBOOK_ENTRIES,serial);
 
         Mds.builder().build(this).get(fetchUri, null, new MdsResponseListener() {
