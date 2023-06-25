@@ -16,6 +16,10 @@ public class LogData {
         @SerializedName("Gyro")
         public List<Gyro> gyro;
 
+        @SerializedName("HR")
+        public List<Hr> hr;
+
+
     }
     public class Acc{
         @SerializedName("Timestamp")
@@ -30,6 +34,14 @@ public class LogData {
         public long timestamp;
         @SerializedName("ArrayGyro")
         public List<Data> arrayGyro;
+    }
+
+    public class Hr{
+        @SerializedName("average")
+        public double average;
+
+        @SerializedName("rrData")
+        public List<Integer> rrData;
     }
 
     public class Data{
@@ -65,6 +77,18 @@ public class LogData {
 
 
         }
+        sb.append("\n");
+        if(meas.hr != null){
+            for(Hr h: meas.hr){
+                sb.append("HR Average: "+h.average);
+                for(int rr: h.rrData) {
+                    sb.append(",rrData: "+String.valueOf(rr)+"\n");
+                }
+            }
+
+
+        }
+
         return sb.toString();
     }
 }
